@@ -1,0 +1,2 @@
+# Basketball-Tactical-Intelligence-A-GPU-Accelerated-Computer-Vision-System
+Developed a high-performance system to extract tactical insights from basketball footage using YOLO. Optimized the inference engine for NVIDIA GPUs to ensure high-throughput processing and utilized MLOps best practices, including Docker and MLflow. Features automated spatial mapping to transform broadcast video into actionable player telemetry.
