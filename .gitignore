@@ -1,0 +1,22 @@
+# Ignore python cache
+__pycache__/
+*.py[cod]
+
+# Ignore data and large files
+input_videos/
+output_videos/
+stubs/
+runs/
+
+# Ignore virtual environment
+hoops-env/
+.venv/
+.env
+
+
+# Ignore training data
+datasets/
+train/
+val/
+test/
+
