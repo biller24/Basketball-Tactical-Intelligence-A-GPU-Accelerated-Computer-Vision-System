@@ -44,7 +44,7 @@ class PlayerTracker:
 
                 # Check if the detection is a 'Player'
                 if cls_id == cls_names_inv["Player"]:
-                    tracks[frame_num][track_id] = {"box": bbox.tolist()}
+                    tracks[frame_num][track_id] = {"bbox": bbox}
         save_stub(stub_path,tracks)
         return tracks
 
