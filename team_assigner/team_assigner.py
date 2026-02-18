@@ -5,10 +5,14 @@ import sys
 sys.path.append('../')
 from utils import read_stub, save_stub
 
+from collections import Counter
+
 class TeamAssigner:
     def __init__(self, team_1_class_name="white shirt", team_2_class_name="dark blue shirt"):
         self.team_colors = {}
         self.player_team_dict = {}
+        self.player_team_votes = {}  # Temporary storage for voting
+        self.voting_buffer = 21  # How many samples to take before deciding
 
         self.team_1_class_name = team_1_class_name
         self.team_2_class_name = team_2_class_name
@@ -38,16 +42,32 @@ class TeamAssigner:
         return class_name
 
     def get_player_team(self, frame, player_bbox, player_id):
+        player_id = int(player_id)
         if player_id in self.player_team_dict:
             return self.player_team_dict[player_id]
 
         player_color = self.get_player_color(frame, player_bbox)
+        team_id = 1 if player_color == self.team_1_class_name else 2
 
-        team_id = 2
-        if player_color == self.team_1_class_name:
-            team_id = 1
+        if player_id not in self.player_team_votes:
+            self.player_team_votes[player_id] = []
 
-        self.player_team_dict[player_id] = team_id
+        self.player_team_votes[player_id].append(team_id)
+
+        # Check if we have enough votes to make a final decision
+        if len(self.player_team_votes[player_id]) >= self.voting_buffer:
+            # Count the votes and pick the winner
+            votes = self.player_team_votes[player_id]
+            final_team = Counter(votes).most_common(1)[0][0]
+
+            # Lock the decision in the main dictionary
+            self.player_team_dict[player_id] = final_team
+
+            # Clear the voting history to save RAM
+            del self.player_team_votes[player_id]
+
+            return final_team
+
         return team_id
 
     def get_player_teams_across_frames(self, video_frames, player_tracks, read_from_stub=False, stub_path=None):
@@ -61,9 +81,6 @@ class TeamAssigner:
         player_assignment = []
         for frame_num, player_track in enumerate(player_tracks):
             player_assignment.append({})
-
-            if frame_num % 50 == 0:
-                self.player_team_dict = {}
 
             for player_id, track in player_track.items():
                 team = self.get_player_team(video_frames[frame_num],
