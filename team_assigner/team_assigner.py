@@ -12,7 +12,7 @@ class TeamAssigner:
         self.team_colors = {}
         self.player_team_dict = {}
         self.player_team_votes = {}  # Temporary storage for voting
-        self.voting_buffer = 21  # How many samples to take before deciding
+        self.voting_buffer = 51  # How many samples to take before deciding
 
         self.team_1_class_name = team_1_class_name
         self.team_2_class_name = team_2_class_name

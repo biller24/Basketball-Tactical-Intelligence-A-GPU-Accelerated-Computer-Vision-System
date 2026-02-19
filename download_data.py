@@ -9,3 +9,8 @@ project = rf.workspace("workspace-5ujvu").project("basketball-players-fy4c2-vfsu
 version = project.version(17)
 dataset = version.download("yolov5")
 
+
+new_project = rf.workspace("fyp-3bwmg").project("reloc2-den7l")
+new_version = new_project.version(1)
+new_dataset = new_version.download("yolov8")
+
