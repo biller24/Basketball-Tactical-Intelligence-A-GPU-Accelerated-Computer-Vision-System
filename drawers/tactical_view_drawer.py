@@ -12,7 +12,7 @@ class TacticalViewDrawer:
              court_image_path,
              width,
              height,
-             tactical_court_keypoints
+             tactical_court_keypoints,tactical_player_positions,player_assignment=None,ball_acquisition=None
              ):
         court_image = cv2.imread(court_image_path)
         court_image = cv2.resize(court_image, (width, height))
@@ -37,6 +37,33 @@ class TacticalViewDrawer:
                 y += self.start_y
                 cv2.circle(frame, (x, y), 5, (0, 0, 255), -1)
                 cv2.putText(frame, str(keypoint_index), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+            if tactical_player_positions and player_assignment and frame_idx < len(tactical_player_positions):
+                frame_positions = tactical_player_positions[frame_idx]
+                frame_assignments = player_assignment[frame_idx] if frame_idx < len(player_assignment) else {}
+                player_with_ball = ball_acquisition[frame_idx] if ball_acquisition and frame_idx < len(
+                    ball_acquisition) else -1
+
+                for player_id, position in frame_positions.items():
+                    # Get player's team
+                    team_id = frame_assignments.get(player_id, 1)  # Default to team 1 if not assigned
+
+                    # Set color based on team
+                    color = self.team_1_color if team_id == 1 else self.team_2_color
+
+                    # Adjust position to overlay coordinates
+                    x, y = int(position[0]) + self.start_x, int(position[1]) + self.start_y
+
+                    # Draw player circle
+                    player_radius = 8
+                    cv2.circle(frame, (x, y), player_radius, color, -1)
+
+                    # Add player ID
+                    # cv2.putText(frame, str(player_id), (x-4, y+4), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
+
+                    # Highlight player with ball
+                    if player_id == player_with_ball:
+                        cv2.circle(frame, (x, y), player_radius + 3, (0, 0, 255), 2)
 
             output_video_frames.append(frame)
 

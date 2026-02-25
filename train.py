@@ -34,20 +34,22 @@ def train_model():
 
 def train_court_keypoints():
     
-    model = YOLO("yolo11s-pose.pt")
+    model = YOLO("yolo26s-pose.pt")
 
     results = model.train(
         data=str(DATA_COURT),
-        epochs=300,
+        epochs=200,
         imgsz=640,
         batch=16,
-        patience=50,
+        patience=30,
         optimizer='AdamW',
         device=0,
+        workers=2,
         # Keypoint specific weights
         kobj=2.0,          # Weight for keypoint objectness
-        pose=12.0,         # Weight for keypoint loss (higher helps accuracy)
-        name="court_keypoints_v1"
+        pose=15.0,         # Weight for keypoint loss (higher helps accuracy)
+        perspective=0.0005,
+        name="court_keypoints_v2"
     )
 
 if __name__ == "__main__":

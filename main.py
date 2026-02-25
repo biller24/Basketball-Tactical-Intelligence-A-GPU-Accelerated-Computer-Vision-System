@@ -31,6 +31,9 @@ def main():
     court_keypoints = court_keypoint_detector.get_court_keypoints(video_frames,read_from_stub= True, stub_path="stubs/court_keypoint_stubs.pkl")
     court_keypoints = tactical_view_converter.validate_keypoints(court_keypoints)
 
+    # Tactical View
+    tactical_player_positions = tactical_view_converter.transform_players_to_tactical_view(court_keypoints,player_tracks)
+
     # Remove wrong ball Detections
     ball_tracks = ball_tracker.remove_wrong_detections(ball_tracks)
     # Interpolate Ball Tracks
@@ -72,7 +75,7 @@ def main():
     output_video_frames = court_keypoints_drawer.draw(output_video_frames,court_keypoints)
 
     # Tactical View
-    output_video_frames =  tactical_view_drawer.draw(output_video_frames,tactical_view_converter.court_image_path,tactical_view_converter.width,tactical_view_converter.height,tactical_view_converter.key_points)
+    output_video_frames =  tactical_view_drawer.draw(output_video_frames,tactical_view_converter.court_image_path,tactical_view_converter.width,tactical_view_converter.height,tactical_view_converter.key_points,tactical_player_positions,player_assignment,ball_acquisition)
 
     # Save Video
     save_video(output_video_frames, "output_videos/output_video.avi")
