@@ -6,7 +6,7 @@ An end-to-end Computer Vision pipeline designed to analyze basketball gameplay. 
 
 ## 📺 Demo
  
-
+![Basketball Analysis Demo](./output_video.gif)
 
 ---
 
